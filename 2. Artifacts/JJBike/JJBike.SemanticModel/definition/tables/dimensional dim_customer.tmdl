@@ -1,0 +1,132 @@
+table 'dimensional dim_customer'
+	lineageTag: 4d2d56a7-1912-45fb-962e-25f0b6d8a37e
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 194405f5-4982-4642-b85a-971ed7047442
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_customer
+		dataType: int64
+		formatString: 0
+		lineageTag: 47190a47-a455-4034-bd9d-431ae4f5ba91
+		summarizeBy: none
+		sourceColumn: id_customer
+
+		annotation SummarizationSetBy = User
+
+	column customer_name
+		dataType: string
+		lineageTag: 88f900da-e418-4cca-b223-d6d875434dc7
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 70f0dc8f-c72c-4151-a08d-e0da04d4c467
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_gender
+		dataType: string
+		lineageTag: e175b43f-0ade-4e2e-a236-30907bedc4aa
+		summarizeBy: none
+		sourceColumn: customer_gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_status
+		dataType: string
+		lineageTag: cc138e9f-4e46-421a-a26e-ec770719f8de
+		summarizeBy: none
+		sourceColumn: customer_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column validity_start_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 83cbb2ec-f72b-48cb-8470-b08f3e935665
+		summarizeBy: none
+		sourceColumn: validity_start_date
+
+		variation Variation
+			isDefault
+			relationship: 2709ad87-46c4-4fab-8a59-395a8e27dd7b
+			defaultHierarchy: LocalDateTable_a87658dc-f279-475c-9231-073656fe6755.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column validity_end_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 210c4643-d948-4ac1-a9bf-685be8edeffd
+		summarizeBy: none
+		sourceColumn: validity_end_date
+
+		variation Variation
+			isDefault
+			relationship: 49e7c2c4-e758-4a48-9b52-aadcdaa8059c
+			defaultHierarchy: LocalDateTable_a4c0f5c9-d9e7-4538-b1b8-c63ce4264027.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column location_map =
+			
+			SWITCH(
+			    'dimensional dim_customer'[customer_state],
+			    "AC", "Acre",
+			    "AL", "Alagoas",
+			    "AM", "Amazonas",
+			    "AP", "Amapá",
+			    "BA", "Bahia",
+			    "CE", "Ceará",
+			    "DF", "Distrito Federal",
+			    "ES", "Espírito Santo",
+			    "GO", "Goiás",
+			    "MA", "Maranhão",
+			    "MG", "Minas Gerais",
+			    "MS", "Mato Grosso do Sul",
+			    "MT", "Mato Grosso",
+			    "PA", "Pará",
+			    "PB", "Paraíba",
+			    "PE", "Pernambuco",
+			    "PI", "Piauí",
+			    "PR", "Paraná",
+			    "RJ", "Rio de Janeiro",
+			    "RN", "Rio Grande do Norte",
+			    "RO", "Rondônia",
+			    "RR", "Roraima",
+			    "RS", "Rio Grande do Sul",
+			    "SC", "Santa Catarina",
+			    "SE", "Sergipe",
+			    "SP", "São Paulo",
+			    "TO", "Tocantins",
+			    "Unknown"
+			) & ", Brazil"
+		lineageTag: 9f8211c2-9d0d-4de3-9b85-f582ffe41104
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'dimensional dim_customer' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "JJBike"),
+				    dimensional_dim_customer = Source{[Schema="dimensional",Item="dim_customer"]}[Data]
+				in
+				    dimensional_dim_customer
+

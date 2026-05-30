@@ -1,0 +1,107 @@
+table 'dimensional fact_sales'
+	lineageTag: 56f40089-5bb6-4509-bca1-ec19796086c6
+
+	column sale_key
+		dataType: int64
+		formatString: 0
+		lineageTag: dd8b423f-04c5-4aac-8184-9aae35818faa
+		summarizeBy: none
+		sourceColumn: sale_key
+
+		annotation SummarizationSetBy = User
+
+	column seller_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a394c4a-e76b-4f38-8a30-c54d1a9cda51
+		summarizeBy: none
+		sourceColumn: seller_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 08e42f69-b56b-4c97-86bc-8d5c5e80899e
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a7236a2-8ba8-42e3-9eae-6ed7b553006a
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c082d0b-ec39-4cc9-a1bc-cd726837aff1
+		summarizeBy: none
+		sourceColumn: time_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 5de9cf38-d92d-4962-a583-463511e5b2c1
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 1b76be46-c647-41e4-864e-24c3bb9ede58
+		summarizeBy: sum
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column total_price
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 14cb5bd2-c157-4d8a-bff4-5bc7783b08b1
+		summarizeBy: sum
+		sourceColumn: total_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column discount
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 3ee73c87-23de-4212-9f7d-a6ff435593e9
+		summarizeBy: sum
+		sourceColumn: discount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column discount_percent = TRUNC(('dimensional fact_sales'[discount] / 'dimensional fact_sales'[total_price]) * 100, 2)
+		lineageTag: 1cd2169d-3048-4d45-bd06-72bdc18c2949
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'dimensional fact_sales' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "JJBike"),
+				    dimensional_fact_sales = Source{[Schema="dimensional",Item="fact_sales"]}[Data]
+				in
+				    dimensional_fact_sales
+

@@ -1,0 +1,165 @@
+table 'dimensional sales_cube'
+	lineageTag: 43a79f2c-e935-4c00-82c2-60e375a3c813
+
+	column customer_name
+		dataType: string
+		lineageTag: e61e27e1-c3f5-4916-bedd-b8a3f0c486cc
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: e01fab1d-bd5e-4d7f-b79b-5047f4458fe1
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_gender
+		dataType: string
+		lineageTag: 7bd14429-cddd-449b-99d1-98ed828bf6c6
+		summarizeBy: none
+		sourceColumn: customer_gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_status
+		dataType: string
+		lineageTag: 6fcdaed4-ab2d-4033-95c7-aeb5c6f73c07
+		summarizeBy: none
+		sourceColumn: customer_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 1c2cf387-9869-409f-835c-8d85deff6ac0
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 75a4f71e-e449-4758-9fee-4786af45c836
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column total_price
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 7625b4ed-5282-45a5-b682-c721b414c6b3
+		summarizeBy: sum
+		sourceColumn: total_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column discount
+		dataType: double
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: f2719249-521e-40f8-bc85-d217c96ed135
+		summarizeBy: sum
+		sourceColumn: discount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column product_name
+		dataType: string
+		lineageTag: 048e8c66-d439-4070-8737-b23bf5b99255
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4da93fb2-426d-4844-8ff3-1e78b4cac138
+		summarizeBy: none
+		sourceColumn: time_date
+
+		variation Variation
+			isDefault
+			relationship: ea142bcf-68ac-475c-b0b7-51a6e6ee50fc
+			defaultHierarchy: LocalDateTable_0841ab27-2aca-4e62-92c7-f47af553d3de.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column time_day
+		dataType: int64
+		formatString: 0
+		lineageTag: 035adfa2-0b49-4621-a3d4-4af764f43618
+		summarizeBy: none
+		sourceColumn: time_day
+
+		annotation SummarizationSetBy = User
+
+	column time_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a8d9e2b-2e3b-4fd5-ac45-0a343c88c72d
+		summarizeBy: none
+		sourceColumn: time_month
+
+		annotation SummarizationSetBy = User
+
+	column time_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 64eb7f6f-1039-461b-9d55-798e83ff4bba
+		summarizeBy: none
+		sourceColumn: time_year
+
+		annotation SummarizationSetBy = User
+
+	column time_quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 7724b53f-6907-43bb-8e61-08c61c0b2024
+		summarizeBy: none
+		sourceColumn: time_quarter
+
+		annotation SummarizationSetBy = User
+
+	column seller_name
+		dataType: string
+		lineageTag: ca142ba6-4bc1-418a-bc74-7c5548cdd13e
+		summarizeBy: none
+		sourceColumn: seller_name
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Geographic Hierarchy'
+		lineageTag: f5ba8dd2-e316-4cfc-b153-08b482f6ba4a
+
+		level 'Customer State'
+			lineageTag: 2733eaa4-8ee9-4d21-be5b-4d165a3356d1
+			column: customer_state
+
+		level 'Customer Name'
+			lineageTag: c6e56880-a9a3-4e92-a741-c6a7c1dc742d
+			column: customer_name
+
+	partition 'dimensional sales_cube' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "JJBike"),
+				    dimensional_sales_cube = Source{[Schema="dimensional",Item="sales_cube"]}[Data]
+				in
+				    dimensional_sales_cube
+
