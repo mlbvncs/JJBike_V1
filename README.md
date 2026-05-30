@@ -10,11 +10,11 @@ The project covers data organization, transformation, modeling, and analysis to 
 
 ## Technologies used
 
-- PostgreSQL
-- SQL
-- Power BI
-- Git
-- GitHub
+- PostgreSQL.
+- SQL.
+- Power BI.
+- Git.
+- GitHub.
 
 ## Project structure
 
@@ -28,7 +28,7 @@ JJBike_PostgreSQL/
 │   └── SQL scripts, queries, and project artifacts
 │
 ├── 3. Translations/
-│   └── Data translation and standardization files
+│   └── Brazilian portuguese data translation and standardization files
 │
 ├── Analysis.pdf
 │   └── Analysis report and findings
@@ -48,13 +48,13 @@ JJBike_PostgreSQL/
 
 The project may include analyses such as:
 
-- Total sales performance
-- Revenue trends over time
-- Best-selling products
-- Category performance analysis
-- Customer purchasing behavior
-- Profitability indicators
-- Operational performance metrics
+- Total sales performance.
+- Revenue trends over time.
+- Best-selling products.
+- Category performance analysis.
+- Customer purchasing behavior.
+- Profitability indicators.
+- Operational performance metrics.
 
 ## Getting Started
 
@@ -90,13 +90,13 @@ The `Analysis.pdf` file contains detailed information about the analysis process
 
 This project was developed to strengthen skills in:
 
-- Database Design
-- SQL Query Development
-- Data Analysis
-- Business Intelligence
-- PostgreSQL Administration
-- Power BI Dashboard Development
-- Data Visualization
+- Database Design.
+- SQL Query Development.
+- Data Analysis.
+- Business Intelligence.
+- PostgreSQL Administration.
+- Power BI Dashboard Development.
+- Data Visualization.
 
 ## Contributing
 
