@@ -1,6 +1,6 @@
 # JJBike PostgreSQL - Business Intelligence Analysis
 
-A comprehensive Business Intelligence project that combines PostgreSQL and Power BI to analyze and visualize business data from the fictional company JJBike.
+A comprehensive Business Intelligence project that combines PostgreSQL and Power BI to build a data warehouse so that the administrator of the fictional company JJBike can understand their business.
 
 ---
 
@@ -13,7 +13,6 @@ A comprehensive Business Intelligence project that combines PostgreSQL and Power
 - [Running the Project](#running-the-project)
 - [Project Structure](#project-structure)
 - [Project Objectives](#project-objectives)
-- [Analysis Highlights](#analysis-highlights)
 - [Learning Outcomes](#learning-outcomes)
 - [Contributing](#contributing)
 - [License](#license)
@@ -23,29 +22,26 @@ A comprehensive Business Intelligence project that combines PostgreSQL and Power
 
 ## 📝 Project Description
 
-This project demonstrates the complete development of a Business Intelligence solution using PostgreSQL as the database management system and Power BI as the visualization and reporting tool.
+This project demonstrates the complete development of a Business Intelligence solution using PostgreSQL as the database management system and Power BI as a tool for visualization and generating reports, dashboards, and cubes.
 
-**Key Focus Areas:**
-- Data organization and management using PostgreSQL
-- SQL-based data extraction and transformation
-- Data modeling and standardization (including Brazilian Portuguese translations)
-- Business metrics and KPI development
-- Interactive dashboard creation with Power BI
-- Data-driven decision-making support
-
-The project includes comprehensive analysis of business metrics such as sales performance, revenue trends, product analysis, customer behavior, and profitability indicators.
+**Main areas of focus:**
+- Requirements Gathering: Defining the indicators and questions that the project should answer
+- Transactional Modeling (PostgreSQL): Creating the ERD (Drawing the logical diagram and populating the normalized tables)
+- Dimensional Modeling (PostgreSQL): Star Schema Structure (Creating and populating the fact and dimension tables using surrogate keys)
+- Integration and Transformation (Power BI): Data Handling (Connecting PostgreSQL to Power Query to adjust types and relationships)
+- Visualization and Delivery: Reports, dashboards, and cube
 
 ---
 
 ## 🛠 Technologies Used
 
-| Technology | Purpose |
-|-----------|---------|
-| **PostgreSQL** | Relational database management system for data storage and management |
-| **SQL** | Data querying, and extraction |
-| **Power BI** | Data visualization, interactive dashboard creation, and transformation |
-| **Git** | Version control |
-| **GitHub** | Repository hosting and collaboration |
+| Technology |
+|-----------|
+| **PostgreSQL** |
+| **SQL** |
+| **Power BI** |
+| **Git** |
+| **GitHub** |
 
 ---
 
@@ -111,23 +107,23 @@ cd JJBike_PostgreSQL
    GRANT ALL PRIVILEGES ON DATABASE jjbike_db TO jjbike_user;
    ```
 
-#### Option B: Using pgAdmin (GUI)
+#### Option B: Using pgAdmin 4 (GUI)
 
-1. Open pgAdmin and connect to your PostgreSQL server
+1. Open pgAdmin 4 and connect to your PostgreSQL server
 2. Right-click on "Databases" → Create → Database
 3. Enter `jjbike_db` as the database name
 4. Create a user with appropriate permissions
 
 ### Step 3: Import Database Scripts
 
-1. Navigate to the **2. Artifacts** folder to locate the SQL scripts
+1. Navigate to the **1. Environments** folder to locate the SQL scripts
 2. Import the scripts into your PostgreSQL database:
 
 ```bash
 psql -U postgres -d jjbike_db -f "path/to/script.sql"
 ```
 
-Or using pgAdmin:
+Or using pgAdmin 4:
 - Right-click on the database → Restore
 - Select the SQL file and follow the wizard
 
@@ -156,13 +152,11 @@ psql -U postgres -d jjbike_db -c "SELECT version();"
 
 ### 2. Execute SQL Queries
 
-Navigate to the **2. Artifacts** folder and execute the SQL scripts in the following recommended order:
+Navigate to the **1. Environments** folder and execute the SQL scripts in the following recommended order:
 
 ```bash
 # Example: Run data initialization scripts
-psql -U postgres -d jjbike_db -f "2. Artifacts/01_schema_creation.sql"
-psql -U postgres -d jjbike_db -f "2. Artifacts/02_data_import.sql"
-psql -U postgres -d jjbike_db -f "2. Artifacts/03_views_and_queries.sql"
+psql -U postgres -d jjbike_db -f "1. Environments/2.OLAP/1. Scripts_Create_Tables_Relational.sql"
 ```
 
 ### 3. Connect to Power BI
@@ -174,15 +168,15 @@ psql -U postgres -d jjbike_db -f "2. Artifacts/03_views_and_queries.sql"
    - **Database:** jjbike_db
    - **Username:** postgres (or your custom user)
    - **Password:** your_password_here
-4. Select the tables and views you want to analyze
+4. Select the tables you want to analyze
 5. Click **Load** to import the data
 6. Build your dashboards and reports
 
 ### 4. Explore the Analysis
 
 - Check the **Analysis.pdf** file for detailed findings and methodology
-- Review the dashboards created in Power BI
-- Examine the SQL queries in the **2. Artifacts** folder for data insights
+- Review the reports, dashboards, and cube created in Power BI
+- Examine the SQL queries in the **1. Environments** folder for data insights
 
 ---
 
@@ -229,41 +223,19 @@ JJBike_PostgreSQL/
 
 ## 🎯 Project Objectives
 
-- ✅ Organize and manage business data using PostgreSQL
-- ✅ Perform SQL-based data extraction, transformation, and analysis
-- ✅ Build Key Performance Indicators (KPIs) for business metrics
-- ✅ Create interactive and intuitive dashboards with Power BI
-- ✅ Generate actionable insights to support business decisions
-- ✅ Demonstrate data visualization best practices
-- ✅ Provide a reproducible BI solution template
-
----
-
-## 📊 Analysis Highlights
-
-The project includes comprehensive analyses of:
-
-- **Sales Performance:** Total sales, sales trends, and performance metrics
-- **Revenue Analysis:** Revenue by period, growth trends, and forecasting
-- **Product Analysis:** Best-selling products, product performance, and inventory insights
-- **Category Performance:** Sales and revenue breakdown by category
-- **Customer Behavior:** Purchasing patterns, customer segmentation, and retention
-- **Profitability Indicators:** Profit margins, cost analysis, and ROI metrics
-- **Operational Metrics:** Efficiency indicators, performance benchmarks, and KPIs
+- ✅ To build a data warehouse so that the administrator of the fictional company JJBike can understand their business.
 
 ---
 
 ## 📚 Learning Outcomes
 
-This project strengthens skills in:
+This project enhances skills in:
 
-- **Database Design:** Designing efficient relational database schemas
-- **SQL Development:** Writing complex queries
-- **Data Analysis:** Analyzing data to extract meaningful insights
-- **Business Intelligence:** Building end-to-end BI solutions
-- **PostgreSQL Administration:** Database management and optimization
-- **Power BI Development:** Creating dashboards and reports
-- **Data Visualization:** Presenting data effectively and intuitively
+- **SQL**
+- **Business Intelligence Analysis**
+- **PostgreSQL Administration**
+- **Power BI Development**
+- **Data Visualization**
 
 ---
 
@@ -294,7 +266,7 @@ This project is available for educational and portfolio purposes.
 **Malba Vinicius Lopes Santos**
 
 - GitHub: [@mlbvncs](https://github.com/mlbvncs)
-- Portfolio: Business Intelligence & Data Analysis
+- Portfolio: Business Intelligence Analysis
 
 ---
 
