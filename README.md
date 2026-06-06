@@ -42,8 +42,8 @@ The project includes comprehensive analysis of business metrics such as sales pe
 | Technology | Purpose |
 |-----------|---------|
 | **PostgreSQL** | Relational database management system for data storage and management |
-| **SQL** | Data querying, extraction, and transformation |
-| **Power BI** | Data visualization and interactive dashboard creation |
+| **SQL** | Data querying, and extraction |
+| **Power BI** | Data visualization, interactive dashboard creation, and transformation |
 | **Git** | Version control |
 | **GitHub** | Repository hosting and collaboration |
 
@@ -192,21 +192,13 @@ psql -U postgres -d jjbike_db -f "2. Artifacts/03_views_and_queries.sql"
 JJBike_PostgreSQL/
 │
 ├── 1. Environments/
-│   ├── Config files
-│   ├── Environment variables
-│   └── Connection strings
+│   ├── SQL scripts
 │
 ├── 2. Artifacts/
-│   ├── SQL scripts for database creation
-│   ├── Data import queries
-│   ├── Views and stored procedures
-│   ├── Analysis queries
 │   └── Power BI resources
 │
 ├── 3. Translations/
-│   ├── Brazilian Portuguese translations
-│   ├── Data standardization files
-│   └── Localization resources
+│   ├── Brazilian Portuguese analysis translation
 │
 ├── Analysis.pdf
 │   └── Comprehensive analysis report and findings
@@ -224,20 +216,14 @@ JJBike_PostgreSQL/
 ### Key Folders Explained
 
 **1. Environments/**
-- Contains environment configuration files for different deployment stages
-- Stores connection strings and configuration variables
-- Used for setting up local, development, and production environments
-
-**2. Artifacts/**
 - Core SQL scripts for database schema creation and data management
 - SQL queries used for data extraction and analysis
+
+**2. Artifacts/**
 - Power BI files and related resources
-- Data transformation and cleaning scripts
 
 **3. Translations/**
-- Brazilian Portuguese translations for data and metadata
-- Data standardization mappings
-- Localization files for multilingual support
+- Brazilian Portuguese analysis translation
 
 ---
 
@@ -272,7 +258,7 @@ The project includes comprehensive analyses of:
 This project strengthens skills in:
 
 - **Database Design:** Designing efficient relational database schemas
-- **SQL Development:** Writing complex queries, stored procedures, and views
+- **SQL Development:** Writing complex queries
 - **Data Analysis:** Analyzing data to extract meaningful insights
 - **Business Intelligence:** Building end-to-end BI solutions
 - **PostgreSQL Administration:** Database management and optimization
@@ -320,5 +306,5 @@ If you found this project useful, please consider giving it a star ⭐ and shari
 
 ---
 
-**Last Updated:** May 31, 2026  
+**Last Updated:** June 05, 2026  
 **Status:** Active Development
