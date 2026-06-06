@@ -1,18 +1,21 @@
 # JJBike PostgreSQL - Business Intelligence Analysis
 
-A comprehensive Business Intelligence project that combines PostgreSQL and Power BI to build a data warehouse so that the administrator of the fictional company JJBike can understand their business.
+A comprehensive **Business Intelligence (BI)** project demonstrating the complete development of a data warehouse using **PostgreSQL** (pgAdmin 4) and **Power BI**. This project transforms a transactional OLTP environment into an analytical OLAP environment using the **Star Schema** dimensional modeling approach.
 
 ---
 
 ## 📋 Table of Contents
 
-- [Project Description](#project-description)
+- [Project Overview](#project-overview)
+- [Architecture](#architecture)
 - [Technologies Used](#technologies-used)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Project](#running-the-project)
+- [Installation & Setup](#installation--setup)
+- [Project Workflow](#project-workflow)
+- [Database Structure](#database-structure)
+- [Key Features](#key-features)
+- [Power BI Artifacts](#power-bi-artifacts)
 - [Project Structure](#project-structure)
-- [Project Objectives](#project-objectives)
 - [Learning Outcomes](#learning-outcomes)
 - [Contributing](#contributing)
 - [License](#license)
@@ -20,55 +23,101 @@ A comprehensive Business Intelligence project that combines PostgreSQL and Power
 
 ---
 
-## 📝 Project Description
+## 🎯 Project Overview
 
-This project demonstrates the complete development of a Business Intelligence solution using PostgreSQL as the database management system and Power BI as a tool for visualization and generating reports, dashboards, and cubes.
+This project builds a **complete data warehouse solution** for the fictional company **JJBike** to enable data-driven business decisions. The solution implements:
 
-**Main areas of focus:**
-- Requirements Gathering: Defining the indicators and questions that the project should answer
-- Transactional Modeling (PostgreSQL): Creating the ERD (Drawing the logical diagram and populating the normalized tables)
-- Dimensional Modeling (PostgreSQL): Star Schema Structure (Creating and populating the fact and dimension tables using surrogate keys)
-- Integration and Transformation (Power BI): Data Handling (Connecting PostgreSQL to Power Query to adjust types and relationships)
-- Visualization and Delivery: Reports, dashboards, and cube
+- **OLTP Environment (Transactional):** Relational schema with 5 operational tables storing real business data
+- **OLAP Environment (Analytical):** Star Schema with dimensional modeling and Slowly Changing Dimensions (SCD Type 2)
+- **Visualization Layer:** Power BI dashboards and reports with hierarchical cubes
+- **KPI Tracking:** Revenue targets vs. actual performance monitoring
+
+**Business Context:** JJBike's administrators need to analyze customer behavior, seller performance, product sales, and revenue targets through multiple dimensions and time-based perspectives.
+
+---
+
+## 🏗️ Architecture
+
+### Data Warehouse Structure (Star Schema)
+
+```
+                    ┌─────────────────┐
+                    │   dim_product   │
+                    │   (what?)       │
+                    └────────┬────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        │                    │                    │
+┌───────▼─────┐      ┌──────▼──────┐     ┌──────▼──────┐
+│ dim_seller  │      │ fact_sales  │     │ dim_customer│
+│  (who?)     │◄─────┤  (core)     ├────►│  (who?)     │
+└─────────────┘      └──────┬──────┘     └─────────────┘
+                             │
+                    ┌────────▼────────┐
+                    │   dim_time      │
+                    │  (when?)        │
+                    └─────────────────┘
+```
+
+### Entity Details
+
+**Dimensions (What, Who, When):**
+
+| Dimension | Attributes | SCD Type | Purpose |
+|-----------|-----------|----------|---------|
+| **dim_product** | product_key, id_product, product_name, validity dates | Type 2 | Tracks what products are sold |
+| **dim_seller** | seller_key, id_seller, seller_name, validity dates | Type 2 | Identifies who the sellers are |
+| **dim_customer** | customer_key, id_customer, customer_name, customer_state, customer_gender, customer_status, validity dates | Type 2 | Segments customers by location, gender, and status |
+| **dim_time** | time_key, time_date, time_day, time_month, time_year, time_weekday, time_quarter | N/A | Enables temporal analysis |
+
+**Fact Table (Metrics):**
+
+| Table | Granularity | Metrics | Aggregation |
+|-------|-------------|---------|-------------|
+| **fact_sales** | Product item per sale | quantity, unit_price, total_price, discount | Sum aggregation across all dimensions |
 
 ---
 
 ## 🛠 Technologies Used
 
-| Technology |
-|-----------|
-| **PostgreSQL** |
-| **SQL** |
-| **Power BI** |
-| **Git** |
-| **GitHub** |
+| Technology | Purpose |
+|-----------|---------|
+| **PostgreSQL 12+** | Relational database for OLTP and OLAP environments |
+| **pgAdmin 4** | GUI for PostgreSQL database administration |
+| **SQL** | Data definition, manipulation, and transformation (Snake Case convention) |
+| **Power BI Desktop** | Data visualization, reporting, and dashboard creation |
+| **Git/GitHub** | Version control and project repository |
 
 ---
 
 ## 📦 Prerequisites
 
-Before getting started, ensure you have the following installed on your system:
+Before getting started, ensure you have the following installed:
 
 - **PostgreSQL** (version 12.0 or higher)
   - Download: https://www.postgresql.org/download/
-  
+  - Includes `psql` command-line tool
+
+- **pgAdmin 4** (optional but recommended for GUI management)
+  - Download: https://www.pgadmin.org/download/
+  - Included with PostgreSQL installer on most platforms
+
 - **Power BI Desktop** (latest version)
   - Download: https://powerbi.microsoft.com/en-us/desktop/
-  
+  - Windows or macOS only
+
 - **Git** (for cloning the repository)
   - Download: https://git-scm.com/
 
-- **pgAdmin** (optional, for GUI database management)
-  - Download: https://www.pgadmin.org/download/
-
 ### System Requirements
-- OS: Windows, macOS, or Linux
-- RAM: Minimum 4GB (8GB recommended)
-- Disk Space: At least 500MB free space
+- **OS:** Windows, macOS, or Linux
+- **RAM:** Minimum 4GB (8GB recommended)
+- **Disk Space:** At least 500MB free space
+- **Port:** 5432 (default PostgreSQL port must be available)
 
 ---
 
-## 💻 Installation
+## 💻 Installation & Setup
 
 ### Step 1: Clone the Repository
 
@@ -77,106 +126,355 @@ git clone https://github.com/mlbvncs/JJBike_PostgreSQL.git
 cd JJBike_PostgreSQL
 ```
 
-### Step 2: Set Up PostgreSQL Database
+### Step 2: Create PostgreSQL Database
 
-#### Option A: Using Command Line
+#### Option A: Using pgAdmin 4 (Recommended for Beginners)
 
-1. **Start PostgreSQL service** (if not already running):
-   - **Windows:** PostgreSQL service should start automatically
-   - **macOS/Linux:** 
-   ```bash
-   sudo systemctl start postgresql
-   ```
+1. Open **pgAdmin 4** and connect to your PostgreSQL server
+2. Right-click on **Databases** → **Create** → **Database**
+3. Enter database name: `JJBIKE`
+4. Click **Save**
 
-2. **Access PostgreSQL terminal:**
-   ```bash
-   psql -U postgres
-   ```
-
-3. **Create a new database:**
-   ```sql
-   CREATE DATABASE jjbike_db;
-   ```
-
-4. **Create a user (optional but recommended):**
-   ```sql
-   CREATE USER jjbike_user WITH PASSWORD 'your_password_here';
-   ALTER ROLE jjbike_user SET client_encoding TO 'utf8';
-   ALTER ROLE jjbike_user SET default_transaction_isolation TO 'read committed';
-   ALTER ROLE jjbike_user SET default_transaction_deferrable TO on;
-   GRANT ALL PRIVILEGES ON DATABASE jjbike_db TO jjbike_user;
-   ```
-
-#### Option B: Using pgAdmin 4 (GUI)
-
-1. Open pgAdmin 4 and connect to your PostgreSQL server
-2. Right-click on "Databases" → Create → Database
-3. Enter `jjbike_db` as the database name
-4. Create a user with appropriate permissions
-
-### Step 3: Import Database Scripts
-
-1. Navigate to the **1. Environments** folder to locate the SQL scripts
-2. Import the scripts into your PostgreSQL database:
+#### Option B: Using Command Line
 
 ```bash
-psql -U postgres -d jjbike_db -f "path/to/script.sql"
+# Connect to PostgreSQL
+psql -U postgres
+
+# Create database
+CREATE DATABASE JJBIKE;
+
+# (Optional) Create dedicated user
+CREATE USER jjbike_user WITH PASSWORD 'secure_password';
+ALTER ROLE jjbike_user SET client_encoding TO 'utf8';
+GRANT ALL PRIVILEGES ON DATABASE JJBIKE TO jjbike_user;
+
+# Exit psql
+\q
 ```
 
-Or using pgAdmin 4:
-- Right-click on the database → Restore
-- Select the SQL file and follow the wizard
+### Step 3: Import SQL Scripts (In Order)
 
-### Step 4: Configure Environment Variables
+Execute the SQL scripts from the `1. Environments` folder in the following sequence:
 
-1. Create a `.env` file in the root directory (if needed):
-   ```
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_NAME=jjbike_db
-   DB_USER=jjbike_user
-   DB_PASSWORD=your_password_here
-   ```
+#### OLTP Environment (Transactional):
+```bash
+# Using pgAdmin: Right-click database → Restore → Select SQL file
 
-2. Update connection strings in your Power BI configuration as needed
+# Or using command line:
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/1. Scripts_Create_Table_Relational.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/2. Insert_Into_Customers.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/3. Insert_Into_Products.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/4. Insert_Into_Sellers.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/5. Insert_Into_Sales.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/1. OLTP/6. Insert_Into_SaleItems.sql"
+```
+
+#### OLAP Environment (Analytical):
+```bash
+psql -U postgres -d JJBIKE -f "1. Environments/2. OLAP/1. Scripts_Create_Table_Dimensional.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/2. OLAP/2. Insert_Into_dim_time.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/2. OLAP/3. Script.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/2. OLAP/4. Cube.sql"
+psql -U postgres -d JJBIKE -f "1. Environments/2. OLAP/5. KPI.sql"
+```
+
+### Step 4: Verify Database Setup
+
+```bash
+psql -U postgres -d JJBIKE -c "SELECT schema_name FROM information_schema.schemata;"
+```
+
+Expected output should show both `Relational` and `Dimensional` schemas.
+
+### Step 5: Connect to Power BI
+
+1. **Open Power BI Desktop**
+2. Click **Get Data** → **PostgreSQL Database**
+3. Enter connection details:
+   - **Server:** `localhost`
+   - **Database:** `JJBIKE`
+   - **Username:** `postgres` (or your custom user)
+   - **Password:** (your PostgreSQL password)
+4. Click **Connect**
+5. Select tables from `Dimensional` schema:
+   - `dim_customer`
+   - `dim_seller`
+   - `dim_product`
+   - `dim_time`
+   - `fact_sales`
+   - `sales_cube`
+   - `kpi`
+6. Click **Load** to import data
 
 ---
 
-## 🚀 Running the Project
+## 🚀 Project Workflow
 
-### 1. Verify Database Setup
+### Phase 1: Transactional Environment (OLTP)
 
-```bash
-psql -U postgres -d jjbike_db -c "SELECT version();"
+The **Relational schema** contains 5 normalized tables following 3NF principles:
+
+| Table | Records | Purpose | Primary Key |
+|-------|---------|---------|------------|
+| **sellers** | N sellers | Stores seller information | id_seller (auto-generated) |
+| **products** | N products | Product catalog with pricing | id_product (auto-generated) |
+| **customers** | N customers | Customer profiles with demographics | id_customer (auto-generated) |
+| **sales** | N transactions | Sale headers with date and total | id_sale (auto-generated) |
+| **sale_items** | N items | Junction table (N:M) between sales and products | (id_sale, id_product) |
+
+**Key Constraints:**
+- All primary keys use `GENERATED ALWAYS AS IDENTITY` for automatic sequential generation
+- Foreign keys use `ON DELETE RESTRICT` for products (prevent deletion if sold) and `ON DELETE CASCADE` for sales (cascade delete items)
+- All business attributes are `NOT NULL` to ensure data integrity
+
+### Phase 2: Analytical Environment (OLAP)
+
+The **Dimensional schema** implements the Star Schema with dimensions and fact table:
+
+#### Dimension Tables (with SCD Type 2 Versioning):
+- **Surrogate Keys (SK):** Internal sequential IDs for efficient joins
+- **Natural Keys:** References to source table IDs for traceability
+- **Versioning:** `validity_start_date` and `validity_end_date` track dimension changes over time
+
+#### Fact Table:
+- Granularity: **One row per product item per sale**
+- Links all dimensions via foreign keys
+- Stores metrics: quantity, unit_price, total_price, discount
+
+#### Time Dimension:
+- **Continuous date range:** January 1, 1970 to December 31, 2049 (29,220 days)
+- Programmatically generated using `GENERATE_SERIES()`
+- Supports all temporal analyses (day, month, quarter, year, weekday)
+
+### Phase 3: SCD Type 2 Implementation
+
+**Slowly Changing Dimensions (Type 2)** preserves complete historical records:
+
+Example: When a customer's status changes from "Silver" to "Gold":
+1. The old record's `validity_end_date` is set to today
+2. A new record is inserted with the updated status and today's `validity_start_date`
+3. Both records coexist; fact table entries retain their historical dimension keys
+
+**Mechanism:**
+- CTE pattern detects changes by comparing all tracked attributes
+- `INNER JOIN` with `validity_end_date IS NULL` filter ensures only active versions are used during fact table loads
+- Historical fact table records automatically reference the correct dimension version
+
+### Phase 4: Analytical Cube & KPI
+
+**Analytical Cube:**
+- Denormalized table joining fact_sales with all dimensions
+- Eliminates surrogate and source keys for simplified Power BI connections
+- Contains only business-relevant attributes for analysis
+
+**KPI Table:**
+- Aggregated monthly revenue (SUM of total_price)
+- Fixed monthly targets (R$ 220,000 to R$ 270,000)
+- Enables achievement percentage calculations
+
+---
+
+## 📊 Database Structure
+
+### OLTP Schema (Relational) - Transactional Data
+```
+Relational.sellers
+├─ id_seller (PK)
+├─ seller_name
+
+Relational.products
+├─ id_product (PK)
+├─ product_name
+└─ product_price
+
+Relational.customers
+├─ id_customer (PK)
+├─ customer_name
+├─ customer_state
+├─ customer_gender
+└─ customer_status
+
+Relational.sales
+├─ id_sale (PK)
+├─ id_seller (FK)
+├─ id_customer (FK)
+├─ sale_date
+└─ total
+
+Relational.sale_items (N:M Junction)
+├─ id_sale (FK, PK)
+├─ id_product (FK, PK)
+├─ quantity
+├─ unit_price
+├─ total_price
+└─ discount
 ```
 
-### 2. Execute SQL Queries
+### OLAP Schema (Dimensional) - Analytical Data
+```
+Dimensional.dim_product
+├─ product_key (PK, SK)
+├─ id_product
+├─ product_name
+├─ validity_start_date
+└─ validity_end_date (SCD Type 2)
 
-Navigate to the **1. Environments** folder and execute the SQL scripts in the following recommended order:
+Dimensional.dim_seller
+├─ seller_key (PK, SK)
+├─ id_seller
+├─ seller_name
+├─ validity_start_date
+└─ validity_end_date (SCD Type 2)
 
-```bash
-# Example: Run data initialization scripts
-psql -U postgres -d jjbike_db -f "1. Environments/2.OLAP/1. Scripts_Create_Tables_Relational.sql"
+Dimensional.dim_customer
+├─ customer_key (PK, SK)
+├─ id_customer
+├─ customer_name
+├─ customer_state
+├─ customer_gender
+├─ customer_status
+├─ validity_start_date
+└─ validity_end_date (SCD Type 2)
+
+Dimensional.dim_time
+├─ time_key (PK, SK)
+├─ time_date
+├─ time_day
+├─ time_month
+├─ time_year
+├─ time_weekday
+└─ time_quarter
+
+Dimensional.fact_sales
+├─ sale_key (PK, SK)
+├─ seller_key (FK)
+├─ customer_key (FK)
+├─ product_key (FK)
+├─ time_key (FK)
+├─ quantity
+├─ unit_price
+├─ total_price
+└─ discount
+
+Dimensional.sales_cube (Denormalized)
+└─ All attributes from fact_sales + all dimension attributes
+
+Dimensional.kpi
+├─ month
+├─ total_revenue
+└─ target
 ```
 
-### 3. Connect to Power BI
+---
 
-1. Open **Power BI Desktop**
-2. Click on **Get Data** → **PostgreSQL database**
-3. Enter connection details:
-   - **Server:** localhost (or your PostgreSQL server address)
-   - **Database:** jjbike_db
-   - **Username:** postgres (or your custom user)
-   - **Password:** your_password_here
-4. Select the tables you want to analyze
-5. Click **Load** to import the data
-6. Build your dashboards and reports
+## 🎯 Key Features
 
-### 4. Explore the Analysis
+### 1. **Star Schema Implementation**
+- Optimized for analytical queries
+- Fast aggregations across dimensions
+- Simplified join logic for Power BI
 
-- Check the **Analysis.pdf** file for detailed findings and methodology
-- Review the reports, dashboards, and cube created in Power BI
-- Examine the SQL queries in the **1. Environments** folder for data insights
+### 2. **Slowly Changing Dimensions (SCD Type 2)**
+- Complete historical tracking of dimension changes
+- Preserves analytical accuracy across time periods
+- Example: Customer status upgrades are tracked with validity dates
+
+### 3. **Automated Surrogate Keys**
+- `GENERATED ALWAYS AS IDENTITY` for all primary keys
+- Eliminates dependency on natural key stability
+- Improves join performance
+
+### 4. **Referential Integrity Constraints**
+- Product deletion prevention (`ON DELETE RESTRICT`) maintains sales history
+- Sale deletion cascade (`ON DELETE CASCADE`) prevents orphaned items
+- Foreign key relationships enforce data consistency
+
+### 5. **Time Dimension Coverage**
+- 29,220 days spanning 80 years (1970–2049)
+- Supports all granularities: day, month, quarter, year
+- Enables time-series analysis
+
+### 6. **KPI Tracking**
+- Monthly revenue targets vs. actuals
+- Dynamic achievement percentage calculations in Power BI
+- Flexible filtering by month and year
+
+---
+
+## 📈 Power BI Artifacts
+
+### Calculated Columns
+
+**In fact_sales:**
+```dax
+discount_percent = TRUNC((discount / total_price) * 100, 2)
+```
+Calculates discount percentage with two decimal places.
+
+**In dim_customer:**
+```dax
+full_location = SWITCH(customer_state,
+    "AC", "Acre", "AL", "Alagoas", ..., "SP", "Sao Paulo", "Unknown") & ", Brazil"
+```
+Maps Brazilian state abbreviations to full names for geographic visualization.
+
+### Measures (KPI Dashboard)
+
+```dax
+measure_target = 
+IF(ISFILTERED('kpi'[month]) || ISFILTERED('dim_time'[time_year]),
+   SUM('kpi'[target]), 0)
+
+measure_total_revenue = 
+IF(ISFILTERED('kpi'[month]) || ISFILTERED('dim_time'[time_year]),
+   SUM('kpi'[total_revenue]), 0)
+```
+Ensure KPI cards display data only when filtered by month or year.
+
+### Reports
+
+1. **Customers Report**
+   - Total value by state
+   - Total value by customer status
+   - Total value by gender
+   - Top 5 customers by revenue
+
+2. **Sellers Report**
+   - Top 5 best-selling sellers
+   - Top 5 worst-selling sellers
+   - Top 5 sellers by month (month-to-month comparison)
+
+3. **Products Report**
+   - Top 5 best-selling products
+   - Top 5 least-selling products
+   - Top 5 products with highest accumulated discount
+   - Top 5 products with lowest accumulated discount
+
+### Dashboards
+
+1. **Sales Dashboard**
+   - Total value of products sold (month-to-month comparison)
+   - Total quantity of products sold (month-to-month comparison)
+   - Total discount (month-to-month comparison)
+   - Filter cards: Product, Seller, Customer
+
+2. **KPI Dashboard**
+   - Target vs. total acquired value (KPI cards)
+   - Target and revenue by month (line/column chart)
+   - Filter cards: Month, Year
+
+### Hierarchies (Analytical Cube)
+
+| Hierarchy | Structure |
+|-----------|-----------|
+| **Geographic** | customer_state → customer_name |
+| **Time** | time_year → time_quarter → time_month → time_day |
+
+**Loose Dimension Attributes** (not in hierarchies):
+- customer_gender, customer_status (from dim_customer)
+- seller_name (from dim_seller)
+- product_name (from dim_product)
 
 ---
 
@@ -186,56 +484,75 @@ psql -U postgres -d jjbike_db -f "1. Environments/2.OLAP/1. Scripts_Create_Table
 JJBike_PostgreSQL/
 │
 ├── 1. Environments/
-│   ├── SQL scripts
+│   ├── 1. OLTP/
+│   │   ├── 1. Scripts_Create_Table_Relational.sql      # Relational schema creation
+│   │   ├── 2. Insert_Into_Customers.sql                # Customer data load
+│   │   ├── 3. Insert_Into_Products.sql                 # Product data load
+│   │   ├── 4. Insert_Into_Sellers.sql                  # Seller data load
+│   │   ├── 5. Insert_Into_Sales.sql                    # Sales data load
+│   │   └── 6. Insert_Into_SaleItems.sql                # Sale items data load
+│   │
+│   └── 2. OLAP/
+│       ├── 1. Scripts_Create_Table_Dimensional.sql     # Dimensional schema creation
+│       ├── 2. Insert_Into_dim_time.sql                 # Time dimension population
+│       ├── 3. Script.sql                               # Dimension loads (SCD Type 2)
+│       ├── 4. Cube.sql                                 # Analytical cube creation
+│       └── 5. KPI.sql                                  # KPI table creation
 │
 ├── 2. Artifacts/
-│   └── Power BI resources
+│   └── [Power BI files and resources]
 │
 ├── 3. Translations/
-│   ├── Brazilian Portuguese analysis translation
+│   └── [Brazilian Portuguese documentation]
 │
-├── Analysis.pdf
-│   └── Comprehensive analysis report and findings
-│
-├── LICENSE
-│   └── MIT License
-│
-├── .gitignore
-│   └── Git ignore configuration
-│
-└── README.md
-    └── This file
+├── Analysis.pdf                                         # Comprehensive project analysis
+├── LICENSE                                              # MIT License
+├── .gitignore                                           # Git configuration
+└── README.md                                            # This file
 ```
-
-### Key Folders Explained
-
-**1. Environments/**
-- Core SQL scripts for database schema creation and data management
-- SQL queries used for data extraction and analysis
-
-**2. Artifacts/**
-- Power BI files and related resources
-
-**3. Translations/**
-- Brazilian Portuguese analysis translation
-
----
-
-## 🎯 Project Objectives
-
-- ✅ To build a data warehouse so that the administrator of the fictional company JJBike can understand their business.
 
 ---
 
 ## 📚 Learning Outcomes
 
-This project enhances skills in:
+This project develops proficiency in:
 
-- **SQL**
-- **Business Intelligence Analysis**
-- **PostgreSQL Administration**
-- **Power BI Development**
-- **Data Visualization**
+### **SQL & Database Design**
+- Transactional database design (OLTP, 3NF normalization)
+- Dimensional database design (OLAP, Star Schema)
+- Advanced SQL: CTEs, window functions, date manipulation, aggregate functions
+- Data integrity: constraints, referential integrity, cascade operations
+- Slowly Changing Dimensions (SCD Type 2) implementation
+
+### **Business Intelligence Concepts**
+- Data warehouse architecture and modeling
+- Fact and dimension tables design
+- Surrogate key generation and management
+- Historical data tracking and versioning
+- KPI definition and tracking
+
+### **PostgreSQL Administration**
+- Schema creation and management
+- Table design and optimization
+- Data loading and transformation
+- Query optimization
+- Automatic key generation with IDENTITY
+
+### **Power BI Development**
+- Data connection and configuration
+- Data modeling and relationships
+- Calculated columns and measures (DAX)
+- Report and dashboard design
+- Interactive filters and slicers
+- Analytical hierarchies
+- Time-series analysis
+
+### **Business Analysis**
+- Requirements gathering and analysis
+- Metric selection and KPI design
+- Multi-dimensional analysis
+- Geographic and temporal segmentation
+- Performance tracking
 
 ---
 
@@ -246,9 +563,9 @@ Contributions, suggestions, and improvements are welcome!
 To contribute:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Commit your changes (`git commit -m 'Add improvement'`)
+4. Push to the branch (`git push origin feature/improvement`)
 5. Open a Pull Request
 
 ---
@@ -257,7 +574,7 @@ To contribute:
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-This project is available for educational and portfolio purposes.
+This project is available for **educational and portfolio purposes**.
 
 ---
 
@@ -266,17 +583,32 @@ This project is available for educational and portfolio purposes.
 **Malba Vinicius Lopes Santos**
 
 - GitHub: [@mlbvncs](https://github.com/mlbvncs)
-- Portfolio: Business Intelligence Analysis
+- Project: Business Intelligence Analysis using PostgreSQL and Power BI
+
+---
+
+## 📖 References
+
+- **PostgreSQL Documentation:** https://www.postgresql.org/docs/
+- **Power BI Documentation:** https://docs.microsoft.com/power-bi/
+- **Star Schema Modeling:** Kimball & Ross, "The Data Warehouse Toolkit"
+- **Slowly Changing Dimensions:** Kimball's SCD Type 2 Patterns
 
 ---
 
 ## 🌟 Acknowledgments
 
-This project was developed to demonstrate comprehensive BI skills and provide a practical example of PostgreSQL and Power BI integration.
+This project demonstrates comprehensive Business Intelligence skills including:
+- Complete data warehouse design and implementation
+- PostgreSQL and pgAdmin 4 proficiency
+- Power BI visualization and reporting
+- SQL optimization and data transformation
+- Data modeling best practices
 
-If you found this project useful, please consider giving it a star ⭐ and sharing it with others interested in business intelligence!
+If you found this project useful, please consider giving it a ⭐ and sharing it with others interested in business intelligence!
 
 ---
 
-**Last Updated:** June 05, 2026  
-**Status:** Active Development
+**Last Updated:** June 6, 2026  
+**Status:** Active & Maintained  
+**Project Type:** Educational Portfolio
