@@ -1,4 +1,4 @@
-# JJBike PostgreSQL - Business Intelligence Analysis
+# JJBike_V1 - Business Intelligence Analysis
 
 A comprehensive **Business Intelligence (BI)** project demonstrating the complete development of a data warehouse using **PostgreSQL** (pgAdmin 4) and **Power BI**.
 
@@ -65,7 +65,7 @@ This project builds a complete data warehouse solution for the fictional company
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/mlbvncs/JJBike_V1.git
-cd JJBike_PostgreSQL
+cd JJBike_V1
 ```
 
 ### 2. Create Database
@@ -120,14 +120,14 @@ You should see `Relational` and `Dimensional` schemas.
 ✅ **Automated Surrogate Keys** - `GENERATED ALWAYS AS IDENTITY`  
 ✅ **Referential Integrity** - Constraints prevent data inconsistency  
 ✅ **Time Dimension** - 29,220 days (1970–2049)  
-✅ **KPI Tracking** - Monthly revenue targets vs. actuals  
+✅ **KPI Tracking** - Monthly revenue targets vs. actuals
 
 ---
 
 ## 📂 Project Structure
 
 ```
-JJBike_PostgreSQL/
+JJBike_V1/
 ├── 1. Environments/
 │   ├── 1. OLTP/          # Relational schema (transactional)
 │   └── 2. OLAP/          # Dimensional schema (analytical)
