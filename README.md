@@ -64,7 +64,7 @@ This project builds a complete data warehouse solution for the fictional company
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/mlbvncs/JJBike_PostgreSQL.git
+git clone https://github.com/mlbvncs/JJBike_V1.git
 cd JJBike_PostgreSQL
 ```
 
